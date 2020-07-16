@@ -554,12 +554,24 @@ static void render_rgbled_status(bool full, struct CharacterMatrix *matrix) {
 }
 
 static void render_layer_status(struct CharacterMatrix *matrix) {
-  // Define layers here, Have not worked out how to have text displayed for each layer. Copy down the number you see and add a case for it below
+  // Define layers here
   char buf[10];
   matrix_write_P(matrix, PSTR("Layer: "));
     switch (layer_state) {
         case L_BASE:
-           matrix_write_P(matrix, PSTR("Default"));
+           switch (get_highest_layer(layer_state | default_layer_state)) {
+               case _QWERTY:
+                  matrix_write_P(matrix, PSTR("Qwerty"));
+                  break;
+               case _COLEMAK:
+                  matrix_write_P(matrix, PSTR("Colemak"));
+                  break;
+               case _DVORAK:
+                  matrix_write_P(matrix, PSTR("Dvorak"));
+                  break;
+               default:
+                  matrix_write_P(matrix, PSTR("Undefined"));
+           }
            break;
         case L_RAISE:
            matrix_write_P(matrix, PSTR("Raise"));
